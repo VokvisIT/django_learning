@@ -1,0 +1,11 @@
+{% extends "questionnaire/base.html" %}
+{% block title %}
+    <h1>Результаты</h1>
+{% endblock title %}
+{% block body %}
+    <h1>Вот результаты по всем тестированиям!</h1>
+    <div>
+        <br>
+        <a href="{% url 'questionnaire:polls_list' %}">Перейти к вопросам!</a>
+    </div>
+{% endblock body %}
