@@ -1,3 +1,4 @@
+{% load questionnaire.templatetags.custom_filters %}
 {% extends "questionnaire/base.html" %}
 {% block title %}
     <h1>Результаты</h1>
@@ -5,6 +6,20 @@
 {% block body %}
     <h1>Вот результаты по всем тестированиям!</h1>
     <div>
+    {% for question in questions %}
+    <h2>{{ question.text }}</h2>
+    <table>
+        {% for choice in question.choices.all %}
+            <tr>
+                <td>{{ choice.text }}</td>
+                <td>{{ statistics[question.id]|get_item:choice.text|default:{'count': 0}.count }}</td>
+                <td>{{ choice.get_percentage }}%</td>
+            </tr>
+        {% endfor %}
+    </table>
+    {% endfor %}
+    </table>
+    {% endfor %}
         <br>
         <a href="{% url 'questionnaire:polls_list' %}">Перейти к вопросам!</a>
     </div>

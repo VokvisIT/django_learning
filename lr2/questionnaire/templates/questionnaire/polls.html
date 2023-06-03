@@ -3,12 +3,12 @@
     <h1>Вопросы</h1>
 {% endblock title %}
 {% block body %}
-    <h1>Ответье на 3 вопроса!</h1>
-    <form method="post">
-        {% csrf_token %}
-        {{form.as_p}}
-        <button type="submit">Отправить</button>
-    </form>
+    <h1>Опросник</h1>
+  <form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Отправить</button>
+  </form>
     <div>
         <br>
         <a href="{% url 'questionnaire:result_list' %}">Перейти к результатам!</a>
