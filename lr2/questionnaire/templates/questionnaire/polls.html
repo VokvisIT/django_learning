@@ -1,16 +1,43 @@
 {% extends "questionnaire/base.html" %}
 {% block title %}
-    <h1>Вопросы</h1>
+    СУПЕР МЕГА ОПРОСНИК! ПИЦЦА АРРИВА ПО ПРОМОКОДУ RECRENT23 В ДОДО ПРИ ЗАКАЗЕ ОТ 999руб
 {% endblock title %}
 {% block body %}
     <h1>Опросник</h1>
-  <form method="post">
-    {% csrf_token %}
-    {% comment %} {{ form.as_p }} {% endcomment %}
-    <button type="submit">Отправить</button>
-  </form>
+  <form method="post" action="{% url 'questionnaire:polls_view' %}">
+  {% csrf_token %}
+  {% for question in questions %}
+    <div>
+      <label for="{{ question.id }}">{{ question.question_text }}</label>
+      {% if question.question_type == 'single_choice' %}
+        {% for choice in question.choice_set.all %}
+          <input type="radio" id="{{ choice.id }}" name="choice" value="{{ choice.id }}">
+          <label for="{{ choice.id }}">{{ choice.choice_text }}</label>
+        {% endfor %}
+      {% elif question.question_type == 'multiple_choice' %}
+        {% for choice in question.choice_set.all %}
+          <input type="checkbox" id="{{ choice.id }}" name="choice" value="{{ choice.id }}">
+          <label for="{{ choice.id }}">{{ choice.choice_text }}</label>
+        {% endfor %}
+      {% else %}
+        <textarea id="{{ question.id }}" name="answer_text"></textarea>
+      {% endif %}
+    </div>
+  {% endfor %}
+  <button type="submit">Отправить</button>
+</form>
+{% if form.errors %}
+  <div class="alert alert-danger">
+    {% for field, errors in form.errors.items %}
+      <strong>{{ field }}:</strong>
+      {% for error in errors %}
+        {{ error }}
+      {% endfor %}
+    {% endfor %}
+  </div>
+{% endif %}
     <div>
         <br>
-        <a href="{% url 'questionnaire:result_list' %}">Перейти к результатам!</a>
+        <a href="{% url 'questionnaire:result_view' %}">Перейти к результатам!</a>
     </div>
 {% endblock body %}

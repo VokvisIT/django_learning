@@ -1,5 +1,4 @@
 from django.db import models
-from django.db.models import Count
 
 QUESTION_TYPES = (
         ('single_choice', 'Одиночный выбор'),
@@ -8,7 +7,7 @@ QUESTION_TYPES = (
     )
 
 class Question(models.Model):
-    question_text = models.CharField(max_length=255)
+    question_text = models.CharField(max_length=255, null=True, blank=True)
     question_type = models.CharField(max_length=20, choices=QUESTION_TYPES)
 
     def __str__(self):
@@ -17,7 +16,7 @@ class Question(models.Model):
 class Choice(models.Model):
     """Класс для набора разных вариантов ответа на single_choice и multiple_choice"""
     question = models.ForeignKey(Question, on_delete=models.CASCADE)
-    choice_text = models.CharField(max_length=200)
+    choice_text = models.CharField(max_length=200, null=True, blank=True)
 
     def __str__(self):
         return self.choice_text.title()
