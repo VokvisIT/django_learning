@@ -1,23 +1,23 @@
+
 from django.shortcuts import redirect, render
 from django.http import HttpRequest
 
-from questionnaire.forms import QuestionForm
-from questionnaire.models import Question
+from questionnaire.forms import SurveyForm
 
 def polls_view(request: HttpRequest):
-    form = QuestionForm(request.POST)
     if request.method == 'POST':
-        # print(request.POST)  # добавленная инструкция print
-        # <QueryDict: {'csrfmiddlewaretoken': ['NrWOVJYYWQSyBTCYJmLZEBeGMjuWXbcIU81cOSSYII11NI3xthvwqnh7ULw3lZSR'], 'answer_text': ['324234', '23424'], 'choice': ['7', '3', '4']}>
-        print(request.POST.getlist('choice'))
+        form = SurveyForm(request.POST)
         if form.is_valid():
-            form.save()
-            return redirect('result_view')
-
-    questions = Question.objects.all()
+            return redirect('questionnaire:result_view')
+        else:
+            # Print the errors to the console for debugging
+            print("===========================")
+            print(form.errors)
+            print("===========================")
+    else:
+        form = SurveyForm()
     context = {
         'form': form,
-        'questions': questions,
     }
     return render(request, 'questionnaire/polls.html', context=context)
 
