@@ -1,28 +1,38 @@
 {% extends "questionnaire/base.html" %}
+{% block head%}
+  {% load static %}
+  <link rel="stylesheet" type="text/css" href="{% static 'questionnaire/css/polls.css' %}">
+{% endblock head %}
 {% block title %}
     СУПЕР МЕГА ОПРОСНИК! ПИЦЦА АРРИВА ПО ПРОМОКОДУ RECRENT23 В ДОДО ПРИ ЗАКАЗЕ ОТ 999руб
 {% endblock title %}
 {% block body %}
-    <h1>Опросник</h1>
-<form method="POST">
-  {% csrf_token %}
-  {% for field in form %}
-    <div class="form-group">
-      <label for="{{ field.id_for_label }}">{{ field.label }}</label>
-      {{ field }}
-      {% if field.errors %}
-        <div class="invalid-feedback">
-          {% for error in field.errors %}
-            <span>{{ error }}</span>
+
+ <main>
+      <div class="questionnaire">
+        <h1>Опросник по DOTA2</h1>
+        <form method="POST">
+          {% csrf_token %}
+          {% for field in form %}
+            <div class="form-group">
+              <label for="{{ field.id_for_label }}" class="small-label">{{ field.label }}</label>
+              {{ field }}
+              {% if field.errors %}
+                <div class="invalid-feedback">
+                  {% for error in field.errors %}
+                    <span>{{ error }}</span>
+                  {% endfor %}
+                </div>
+              {% endif %}
+            </div>
           {% endfor %}
+          <button type="submit" class="btn btn-primary">Отправить</button>
+        </form>
+        <div>
+            <br>
+            <a href="{% url 'questionnaire:result_view' %}" class="btn-link">Перейти к результатам!</a>
         </div>
-      {% endif %}
-    </div>
-  {% endfor %}
-  <button type="submit" class="btn btn-primary">Submit</button>
-</form>
-    <div>
-        <br>
-        <a href="{% url 'questionnaire:result_view' %}">Перейти к результатам!</a>
-    </div>
+      </div>
+    </main>
+
 {% endblock body %}

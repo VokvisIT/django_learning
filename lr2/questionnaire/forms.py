@@ -1,5 +1,5 @@
 from django import forms
-from .models import Choice, Question, Answer
+from .models import Choice, Question, Answer, Poll
 
 class SurveyForm(forms.Form):
     def __init__(self, *args, **kwargs):
@@ -32,3 +32,7 @@ class SurveyForm(forms.Form):
                     choice = Choice.objects.get(id=choice_id)
                     answer = Answer(question=question, choice=choice, answer_text=None)
                     answer.save()
+        poll = Poll.objects.get(id=1)
+        poll.count_comp_add()
+        poll.save()
+        

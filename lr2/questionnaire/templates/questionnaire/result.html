@@ -1,20 +1,35 @@
 {% extends "questionnaire/base.html" %}
-
+{% block head%}
+  {% load static %}
+  <link rel="stylesheet" type="text/css" href="{% static 'questionnaire/css/result.css' %}">
+{% endblock head %}
 {% block title %}
-    <h1>Результаты</h1>
+    Результаты
 {% endblock title %}
 {% block body %}
-    <h1>Вот результаты по всем тестированиям!</h1>
-    <div>
-    {% for question in questions %}
-        <h3>{{ question.question_text }}</h3>
-        <ul>
-        {% for answer in question.get_answers_data %}
-            <li>{{ answer.answer_text }} - {{ answer.count }} {{ answer.percentage|floatformat }}%</li>
+<main>
+    <div class="questionnaire-results">
+        <h1 class="poll-results-heading">Вот результаты по всем тестированиям!</h1>
+        <div class="poll-results-container">
+        <span class="question-text">Количество прохождений опросника: {{ count.count_comp }}</span>
+        {% for question in questions %}
+            <h3>
+            <span class="question-text">{{ question.question_text }}</span>
+            </h3>
+            <ul class="answer-list">
+            {% for answer in question.get_answers_data %}
+                <li class="answer-item">
+                {{ answer.answer_text }} - {{ answer.percentage|floatformat }}% <span class="perc">(Выбрали: {{ answer.count }})</span>
+                </li>
+            {% endfor %}
+            </ul>
         {% endfor %}
-        </ul>
-    {% endfor %}
         <br>
-        <a href="{% url 'questionnaire:polls_view' %}">Перейти к вопросам!</a>
+        <a href="{% url 'questionnaire:polls_view' %}" class="btn-link">Перейти к вопросам!</a>
+        </div>
     </div>
+</main>
+
+
+
 {% endblock body %}

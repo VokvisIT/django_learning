@@ -6,14 +6,22 @@ QUESTION_TYPES = (
         ('multiple_choice', 'Множественный выбор'),
         ('open', 'Открытый вопрос'),
     )
+class Poll(models.Model):
+    poll_title = models.CharField(max_length=50, null=True, blank=True)
+    count_comp = models.IntegerField(default=0)
+    def __str__(self):
+        return self.poll_title
+    def count_comp_add(self):
+        self.count_comp +=1
 
 class Question(models.Model):
     question_text = models.CharField(max_length=255, null=True, blank=True)
     question_type = models.CharField(max_length=20, choices=QUESTION_TYPES)
     num_answers = models.IntegerField(default=0)
+    poll = models.ForeignKey(Poll, on_delete=models.CASCADE)
 
     def __str__(self):
-        return self.question_text.title()
+        return self.question_text
     def get_answers_data(self):
         if self.question_type == 'open':
             answers = self.answer_set.all().values('answer_text')
@@ -51,7 +59,7 @@ class Choice(models.Model):
     choice_text = models.CharField(max_length=200, null=True, blank=True)
 
     def __str__(self):
-        return self.choice_text.title()
+        return self.choice_text
 
 class Answer(models.Model):
     question = models.ForeignKey(Question, on_delete=models.CASCADE)
@@ -61,7 +69,7 @@ class Answer(models.Model):
     def __str__(self):
         return f'{self.question.question_text} - {self.choice or self.answer_text}'
     def save(self, *args, **kwargs):
-            if self.choice:
-                self.question.num_answers += 1
-                self.question.save()
-            super().save(*args, **kwargs)
+        if self.choice or self.question.question_text:
+            self.question.num_answers += 1
+            self.question.save()
+        super().save(*args, **kwargs)

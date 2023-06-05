@@ -3,18 +3,14 @@ from django.shortcuts import redirect, render
 from django.http import HttpRequest
 
 from questionnaire.forms import SurveyForm
-from questionnaire.models import Answer, Question
+from questionnaire.models import Poll, Question
 
 def polls_view(request: HttpRequest):
     if request.method == 'POST':
         form = SurveyForm(request.POST)
         if form.is_valid():
             return redirect('questionnaire:result_view')
-        else:
-            # Print the errors to the console for debugging
-            print("===========================")
-            print(form.errors)
-            print("===========================")
+
     else:
         form = SurveyForm()
     context = {
@@ -24,6 +20,7 @@ def polls_view(request: HttpRequest):
 
 def result_view(request):
     context = {
-        'questions': Question.objects.all()
+        'count': Poll.objects.get(id=1),
+        'questions': Question.objects.all(),
     }
     return render(request, 'questionnaire/result.html', context=context)
