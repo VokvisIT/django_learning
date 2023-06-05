@@ -3,6 +3,7 @@ from django.shortcuts import redirect, render
 from django.http import HttpRequest
 
 from questionnaire.forms import SurveyForm
+from questionnaire.models import Answer, Question
 
 def polls_view(request: HttpRequest):
     if request.method == 'POST':
@@ -21,5 +22,8 @@ def polls_view(request: HttpRequest):
     }
     return render(request, 'questionnaire/polls.html', context=context)
 
-def result_view(request: HttpRequest):
-    return render(request, 'questionnaire/result.html')
+def result_view(request):
+    context = {
+        'questions': Question.objects.all()
+    }
+    return render(request, 'questionnaire/result.html', context=context)

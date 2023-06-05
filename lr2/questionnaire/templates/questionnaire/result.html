@@ -1,11 +1,19 @@
 {% extends "questionnaire/base.html" %}
+
 {% block title %}
     <h1>Результаты</h1>
 {% endblock title %}
 {% block body %}
     <h1>Вот результаты по всем тестированиям!</h1>
     <div>
-    
+    {% for question in questions %}
+        <h3>{{ question.question_text }}</h3>
+        <ul>
+        {% for answer in question.get_answers_data %}
+            <li>{{ answer.answer_text }} - {{ answer.count }} {{ answer.percentage|floatformat }}%</li>
+        {% endfor %}
+        </ul>
+    {% endfor %}
         <br>
         <a href="{% url 'questionnaire:polls_view' %}">Перейти к вопросам!</a>
     </div>
