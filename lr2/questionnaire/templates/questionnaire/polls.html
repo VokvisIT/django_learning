@@ -8,31 +8,5 @@
 {% endblock title %}
 {% block body %}
 
- <main>
-      <div class="questionnaire">
-        <h1>Опросник по DOTA2</h1>
-        <form method="POST">
-          {% csrf_token %}
-          {% for field in form %}
-            <div class="form-group">
-              <label for="{{ field.id_for_label }}" class="small-label">{{ field.label }}</label>
-              {{ field }}
-              {% if field.errors %}
-                <div class="invalid-feedback">
-                  {% for error in field.errors %}
-                    <span>{{ error }}</span>
-                  {% endfor %}
-                </div>
-              {% endif %}
-            </div>
-          {% endfor %}
-          <button type="submit" class="btn btn-primary">Отправить</button>
-        </form>
-        <div>
-            <br>
-            <a href="{% url 'questionnaire:result_view' %}" class="btn-link">Перейти к результатам!</a>
-        </div>
-      </div>
-    </main>
 
 {% endblock body %}

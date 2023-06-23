@@ -7,69 +7,14 @@ QUESTION_TYPES = (
         ('open', 'Открытый вопрос'),
     )
 class Poll(models.Model):
-    poll_title = models.CharField(max_length=50, null=True, blank=True)
-    count_comp = models.IntegerField(default=0)
-    def __str__(self):
-        return self.poll_title
-    def count_comp_add(self):
-        self.count_comp +=1
+    poll_title = models.TextField(max_length=50, null=False, blank=True)
+    completed_count = models.IntegerField(default=0)
 
 class Question(models.Model):
-    question_text = models.CharField(max_length=255, null=True, blank=True)
+    question_text = models.TextField(max_length=100, null=True, blank=True)
     question_type = models.CharField(max_length=20, choices=QUESTION_TYPES)
-    num_answers = models.IntegerField(default=0)
-    poll = models.ForeignKey(Poll, on_delete=models.CASCADE)
 
-    def __str__(self):
-        return self.question_text
-    def get_answers_data(self):
-        if self.question_type == 'open':
-            answers = self.answer_set.all().values('answer_text')
-            answer_counts = answers.annotate(count=Count('answer_text')).order_by('answer_text')
-            total_count = self.num_answers
-            answer_data = []
-            for answer_count in answer_counts:
-                answer_text = answer_count['answer_text']
-                count = answer_count['count']
-                percentage = count / total_count * 100 if total_count > 0 else 0
-                answer_data.append({
-                    'answer_text': answer_text,
-                    'count': count,
-                    'percentage': percentage,
-                })
-        else:
-            answers = self.answer_set.all().select_related('choice')
-            answer_counts = answers.values('choice__choice_text').annotate(count=Count('id'))
-            total_count = self.num_answers
-            answer_data = []
-            for answer_count in answer_counts:
-                answer_text = answer_count['choice__choice_text']
-                count = answer_count['count']
-                percentage = count / total_count * 100 if total_count > 0 else 0
-                answer_data.append({
-                    'answer_text': answer_text,
-                    'count': count,
-                    'percentage': percentage,
-                })
-        return answer_data
-
-class Choice(models.Model):
-    """Класс для набора разных вариантов ответа на single_choice и multiple_choice"""
-    question = models.ForeignKey(Question, on_delete=models.CASCADE)
-    choice_text = models.CharField(max_length=200, null=True, blank=True)
-
-    def __str__(self):
-        return self.choice_text
-
-class Answer(models.Model):
-    question = models.ForeignKey(Question, on_delete=models.CASCADE)
-    choice = models.ForeignKey(Choice, on_delete=models.CASCADE, null=True, blank=True)
-    answer_text = models.CharField(max_length=255, null=True, blank=True)
-
-    def __str__(self):
-        return f'{self.question.question_text} - {self.choice or self.answer_text}'
-    def save(self, *args, **kwargs):
-        if self.choice or self.question.question_text:
-            self.question.num_answers += 1
-            self.question.save()
-        super().save(*args, **kwargs)
+class Choice(models.Models):
+    question_id = models.ForeignKey(Question, on_delete=models.CASCADE)
+    choice_text = models.TextField(max_length=100, null=True, blank=True)
+    answer_count = models.IntegerField(default=0)
