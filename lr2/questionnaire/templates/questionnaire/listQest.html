@@ -1,0 +1,22 @@
+{% extends "questionnaire/base.html" %}
+{% block head%}
+  {% load static %}
+  <link rel="stylesheet" type="text/css" href="{% static 'questionnaire/css/listQest.css' %}">
+{% endblock head %}
+{% block title %}
+    СУПЕР-МЕГА ОПРОСНИКИ! ПИЦЦА АРРИВА ПО ПРОМОКОДУ RECRENT23 В ДОДО ПРИ ЗАКАЗЕ ОТ 999руб
+{% endblock title %}
+{% block body %}
+
+<main>
+  <h1>Список опросников</h1>
+  <ul>
+    {% for poll in polls %}
+      <li>Опросник по теме: <a href="{% url 'questionnaire:polls_view' poll.id %}">{{ poll.poll_title }}</a></li>
+    {% endfor %}
+  </ul>
+</main>
+
+
+
+{% endblock body %}

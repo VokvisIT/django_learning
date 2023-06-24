@@ -7,5 +7,22 @@
     Результаты
 {% endblock title %}
 {% block body %}
+<main class="block-main">
+  <h1 class="title">Результаты по опроснику {{ poll.poll_title }}</h1>
+  {% for question in questions %}
+    <h3>{{ question.question_text }}</h3>
+    <ul>
+      {% for choice in question.choice_set.all %}
+        <li>{{ choice.get_choice_text }}: {{ choice.get_percentage }}%</li>
+      {% endfor %}
+    </ul>
+  {% endfor %}
+  <a href="{% url 'questionnaire:list_qest' %}" class="link">Пройти новый опросник!</a>
+  </br>
+  <a href="{% url 'questionnaire:polls_view' poll.id %}" class="link">Пройти опрос ещё раз!</a>
+</main>
+
+
+
 
 {% endblock body %}

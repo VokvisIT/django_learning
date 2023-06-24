@@ -4,9 +4,17 @@
   <link rel="stylesheet" type="text/css" href="{% static 'questionnaire/css/polls.css' %}">
 {% endblock head %}
 {% block title %}
-    СУПЕР МЕГА ОПРОСНИК! ПИЦЦА АРРИВА ПО ПРОМОКОДУ RECRENT23 В ДОДО ПРИ ЗАКАЗЕ ОТ 999руб
+  Опросник по {{ poll.poll_title }}!
 {% endblock title %}
 {% block body %}
-
+<main class="main">
+  <div class="title"><h1>{{ poll.poll_title }}</h1></div>
+  <form method="POST">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Отправить</button>
+  </form>
+  <a href="{% url 'questionnaire:result_view' poll.id %}" class="link">Результаты опросника по {{ poll.poll_title }}</a>
+</main>
 
 {% endblock body %}
